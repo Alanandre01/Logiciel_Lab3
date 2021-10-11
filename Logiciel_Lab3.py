@@ -60,7 +60,7 @@ class videoGUI:
         self.width = self.cap.get(cv2.CAP_PROP_FRAME_WIDTH)
         self.height = self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
 
-        self.canvas.config(width = 1000, height = 600)
+        self.canvas.config(width = self.width, height = self.height)
 
 
     def get_frame(self):   # get only one frame
@@ -74,8 +74,11 @@ class videoGUI:
         except:
             messagebox.showerror(title='Video file not found', message='Please select a video file.')
 
-
     def play_video(self):
+        self.pause = False
+        self.run_video()
+
+    def run_video(self):
 
         # Get a frame from the video source, and go to the next frame automatically
         ret, frame = self.get_frame()
@@ -89,7 +92,7 @@ class videoGUI:
         if self.pause:
             self.window.after_cancel(self.after_id)
         else:
-            self.after_id = self.window.after(self.delay, self.play_video)
+            self.after_id = self.window.after(self.delay, self.run_video)
 
 
     def pause_video(self):
