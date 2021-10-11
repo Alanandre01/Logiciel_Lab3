@@ -1,11 +1,8 @@
-#https://stackoverflow.com/questions/54472997/video-player-by-python-tkinter-when-i-pause-video-i-cannot-re-play
-
 from tkinter import *
 from tkinter import messagebox
 from tkinter import filedialog
 import PIL.Image, PIL.ImageTk
 import cv2
-
 
 class videoGUI:
 
@@ -20,7 +17,8 @@ class videoGUI:
         bottom_frame = Frame(self.window)
         bottom_frame.pack(side=BOTTOM, pady=5)
 
-        self.pause = False   # Parameter that controls pause button
+        #Etats de la vidéo
+        self.pause = False
         self.stop = True
         self.open = False
 
@@ -43,11 +41,11 @@ class videoGUI:
         self.btn_pause=Button(bottom_frame, text="Stop", width=15, command=self.stop_video)
         self.btn_pause.grid(row=0, column=3)
 
-        # Pause Back
+        # Back Button
         self.btn_back=Button(bottom_frame, text="Back to start", width=15, command=self.back_video)
         self.btn_back.grid(row=0, column=4)
 
-        self.delay = 15   # ms
+        self.delay = 30  # ms
 
         self.window.mainloop()
 
@@ -83,7 +81,8 @@ class videoGUI:
 
         except:
             messagebox.showerror(title='Video file not found', message='Please select a video file.')
-
+    
+    #Play button
     def play_video(self):
         
         self.stop = False
@@ -91,7 +90,8 @@ class videoGUI:
         if self.pause == True:
             self.pause = False
             self.run_video()
-
+    
+    #Pause button
     def pause_video(self):
         self.pause = True
 
@@ -101,24 +101,23 @@ class videoGUI:
         if self.open == True:
             ret, frame = self.get_frame() 
          
-            self.pos = self.cap.get(cv2.CAP_PROP_POS_FRAMES)
-            self.length = self.cap.get(cv2.CAP_PROP_FRAME_COUNT)
+            self.pos = self.cap.get(cv2.CAP_PROP_POS_FRAMES)        #Frame position
+            self.length = self.cap.get(cv2.CAP_PROP_FRAME_COUNT)    #Total frame
 
             if ret:
                 self.photo = PIL.ImageTk.PhotoImage(image = PIL.Image.fromarray(frame))
                 self.canvas.create_image(0, 0, image = self.photo, anchor = NW)
-            # Loop video
+            
+            # Loop at the end of the video
             if self.pos == self.length:
-                self.cap.set(cv2.CAP_PROP_POS_FRAMES,0.0)
+                self.cap.set(cv2.CAP_PROP_POS_FRAMES, 0.0)
 
-            #if not self.pause:
-              #  self.window.after(self.delay, self.play_video)
             if self.pause:
                 self.window.after_cancel(self.after_id)
             else:
                 self.after_id = self.window.after(self.delay, self.run_video)
    
-
+    #Pause button
     def stop_video(self):
 
         self.stop = True
@@ -128,10 +127,10 @@ class videoGUI:
         self.canvas.delete("all")
         cv2.destroyAllWindows()
         
-    
+    #Back button
     def back_video(self):
 
-        self.cap.set(cv2.CAP_PROP_POS_FRAMES,0.0)
+        self.cap.set(cv2.CAP_PROP_POS_FRAMES,0.0) #set frame position
     
     # Release the video source when the object is destroyed
     def __del__(self):
