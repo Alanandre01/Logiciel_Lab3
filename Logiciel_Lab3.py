@@ -21,6 +21,8 @@ class videoGUI:
         bottom_frame.pack(side=BOTTOM, pady=5)
 
         self.pause = False   # Parameter that controls pause button
+        self.stop = True
+        self.open = False
 
         self.canvas = Canvas(top_frame,width=1000, height=600, )
         self.canvas.pack()
@@ -37,9 +39,13 @@ class videoGUI:
         self.btn_pause=Button(bottom_frame, text="Pause", width=15, command=self.pause_video)
         self.btn_pause.grid(row=0, column=2)
 
+        # Stop Button
+        self.btn_pause=Button(bottom_frame, text="Stop", width=15, command=self.stop_video)
+        self.btn_pause.grid(row=0, column=3)
+
         # Pause Back
-        self.btn_back=Button(bottom_frame, text="Back", width=15, command=self.back_video)
-        self.btn_back.grid(row=0, column=3)
+        self.btn_back=Button(bottom_frame, text="Back to start", width=15, command=self.back_video)
+        self.btn_back.grid(row=0, column=4)
 
         self.delay = 15   # ms
 
@@ -62,6 +68,10 @@ class videoGUI:
 
         self.canvas.config(width = self.width, height = self.height)
 
+        self.open = True
+        self.stop = False
+        self.run_video()
+
 
     def get_frame(self):   # get only one frame
 
@@ -75,28 +85,43 @@ class videoGUI:
             messagebox.showerror(title='Video file not found', message='Please select a video file.')
 
     def play_video(self):
-        self.pause = False
-        self.run_video()
+        
+        self.stop = False
+
+        if self.pause == True:
+            self.pause = False
+            self.run_video()
+
+    def pause_video(self):
+        self.pause = True
 
     def run_video(self):
 
         # Get a frame from the video source, and go to the next frame automatically
-        ret, frame = self.get_frame()
+        if self.open == True:
+            ret, frame = self.get_frame()
 
-        if ret:
-            self.photo = PIL.ImageTk.PhotoImage(image = PIL.Image.fromarray(frame))
-            self.canvas.create_image(0, 0, image = self.photo, anchor = NW)
+            if ret:
+                self.photo = PIL.ImageTk.PhotoImage(image = PIL.Image.fromarray(frame))
+                self.canvas.create_image(0, 0, image = self.photo, anchor = NW)
 
-        #if not self.pause:
-          #  self.window.after(self.delay, self.play_video)
-        if self.pause:
-            self.window.after_cancel(self.after_id)
-        else:
-            self.after_id = self.window.after(self.delay, self.run_video)
+            #if not self.pause:
+              #  self.window.after(self.delay, self.play_video)
+            if self.pause:
+                self.window.after_cancel(self.after_id)
+            else:
+                self.after_id = self.window.after(self.delay, self.run_video)
+   
 
+    def stop_video(self):
 
-    def pause_video(self):
-        self.pause = True
+        self.stop = True
+        self.open = False
+
+        self.cap.release()
+        self.canvas.delete("all")
+        cv2.destroyAllWindows()
+        
     
     def back_video(self):
 
