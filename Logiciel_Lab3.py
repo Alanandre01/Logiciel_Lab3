@@ -65,7 +65,7 @@ class videoGUI:
 
         self.width = self.cap.get(cv2.CAP_PROP_FRAME_WIDTH)
         self.height = self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
-
+       
         self.canvas.config(width = self.width, height = self.height)
 
         self.open = True
@@ -99,11 +99,17 @@ class videoGUI:
 
         # Get a frame from the video source, and go to the next frame automatically
         if self.open == True:
-            ret, frame = self.get_frame()
+            ret, frame = self.get_frame() 
+         
+            self.pos = self.cap.get(cv2.CAP_PROP_POS_FRAMES)
+            self.length = self.cap.get(cv2.CAP_PROP_FRAME_COUNT)
 
             if ret:
                 self.photo = PIL.ImageTk.PhotoImage(image = PIL.Image.fromarray(frame))
                 self.canvas.create_image(0, 0, image = self.photo, anchor = NW)
+            # Loop video
+            if self.pos == self.length:
+                self.cap.set(cv2.CAP_PROP_POS_FRAMES,0.0)
 
             #if not self.pause:
               #  self.window.after(self.delay, self.play_video)
@@ -125,25 +131,11 @@ class videoGUI:
     
     def back_video(self):
 
-        #capture from camera at location 0
-        cap = cv2.VideoCapture(0)
-        #set the width and height, and UNSUCCESSFULLY set the exposure time
-        cap.set(2,0)
-        #cap.set(3,1280)
-        #cap.set(4,1024)
-        #cap.set(15, 0.1)
-
-        while True:
-            ret, frame = self.get_frame()
-            cv2.imshow("input", frame)
-            #cv2.imshow("thresholded", imgray*thresh2)
-
-            key = cv2.waitKey(10)
-            if key == 27:
-                break
+        self.cap.set(cv2.CAP_PROP_POS_FRAMES,0.0)
     
     # Release the video source when the object is destroyed
     def __del__(self):
+
         if self.cap.isOpened():
             self.cap.release()
 
