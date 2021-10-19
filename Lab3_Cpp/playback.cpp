@@ -90,11 +90,9 @@ HRESULT DShowPlayer::SetRate()
     return hr;
 }
 
-HRESULT DShowPlayer::SetPositions()
-{
-    LONGLONG* rtNow = 0;
-    
-    HRESULT hr = pSeek->SetPositions(rtNow,
+HRESULT DShowPlayer::SetPositions(LONGLONG* pCurrent)
+{   
+    HRESULT hr = pSeek->SetPositions(pCurrent,
         AM_SEEKING_RelativePositioning, NULL, AM_SEEKING_NoPositioning);
 
     if (SUCCEEDED(hr))

@@ -1,14 +1,13 @@
-from tkinter import *
-from tkinter import messagebox
-from tkinter import filedialog
 import sys
 
-#sys.path.append("C:\\Users\\alana\\Downloads\\Logiciel_Lab3\\x64\\Debug")
+sys.path.append("C:\\Users\\alana\\Downloads\\Logiciel_Lab3\\x64\\Debug")
 
 import Lab3_Cpp
 
-#import PIL.Image, PIL.ImageTk
-#import cv2
+from tkinter import *
+from tkinter import messagebox
+from tkinter import filedialog
+
 
 class videoGUI:
 
@@ -36,20 +35,20 @@ class videoGUI:
         self.btn_select.grid(row=0, column=0)
 
         # Play/Pause Button
-        self.btn_play=Button(bottom_frame, text="Play/Pause", width=15, command=Lab3_Cpp.inputChar("p"))
+        self.btn_play=Button(bottom_frame, text="Play/Pause", width=15, command=lambda: Lab3_Cpp.inputChar("p"))
         self.btn_play.grid(row=0, column=1)
 
         # Stop Button
-        self.btn_pause=Button(bottom_frame, text="Stop", width=15, command=Lab3_Cpp.inputChar("q"))
+        self.btn_pause=Button(bottom_frame, text="Stop", width=15, command=lambda: Lab3_Cpp.inputChar("s"))
         self.btn_pause.grid(row=0, column=3)
 
         # Back Button
-        self.btn_back=Button(bottom_frame, text="Back to start", width=15, command=Lab3_Cpp.inputChar("r"))
+        self.btn_back=Button(bottom_frame, text="Back to start", width=15, command=lambda: Lab3_Cpp.inputChar("r"))
         self.btn_back.grid(row=0, column=4)
 
         # Quit Button
-        self.btn_quit=Button(bottom_frame, text="Quit", width=15, command=self.quit)
-        self.btn_quit.grid(row=0, column=4)
+        self.btn_quit=Button(bottom_frame, text="Quit", width=15, command=lambda: Lab3_Cpp.inputChar("q"))
+        self.btn_quit.grid(row=0, column=5)
 
         #self.delay = 30  # ms
 
@@ -132,7 +131,7 @@ class videoGUI:
         self.open = False
 
         #self.cap.release()
-        self.canvas.delete("all")
+        self.canvas.destroy()
         #cv2.destroyAllWindows()
         
     #Back button
