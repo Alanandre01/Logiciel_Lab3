@@ -47,8 +47,8 @@ void OnChar(wchar_t c)
 
     case L'q':
     case L'Q':
-        exit(0);
         delete g_pPlayer;
+        g_pPlayer == NULL;
         break;
     }
 }
@@ -79,14 +79,14 @@ static PyMethodDef methods[] = {
     { nullptr, nullptr, 0, nullptr }
 };
 
-static PyModuleDef LogicielLab2 = {
+static PyModuleDef Lab3_Cpp = {
     PyModuleDef_HEAD_INIT,
-    "LogicielLab2",         /* name of module */
+    "Lab3_Cpp",         /* name of module */
     NULL,                   /* module documentation, may be NULL */
     0,                      /* size of per-interpreter state of the module, or -1 if the module keeps state in global variables. */
     methods
 };
 
-PyMODINIT_FUNC PyInit_LogicielLab2() {
-    return PyModule_Create(&LogicielLab2);
+PyMODINIT_FUNC PyInit_Lab3_Cpp() {
+    return PyModule_Create(&Lab3_Cpp);
 }

@@ -1,8 +1,14 @@
 from tkinter import *
 from tkinter import messagebox
 from tkinter import filedialog
-//import PIL.Image, PIL.ImageTk
-//import cv2
+import sys
+
+#sys.path.append("C:\\Users\\alana\\Downloads\\Logiciel_Lab3\\x64\\Debug")
+
+import Lab3_Cpp
+
+#import PIL.Image, PIL.ImageTk
+#import cv2
 
 class videoGUI:
 
@@ -29,23 +35,23 @@ class videoGUI:
         self.btn_select=Button(bottom_frame, text="Select video file", width=15, command=self.open_file)
         self.btn_select.grid(row=0, column=0)
 
-        # Play Button
-        self.btn_play=Button(bottom_frame, text="Play", width=15, command=self.play_video)
+        # Play/Pause Button
+        self.btn_play=Button(bottom_frame, text="Play/Pause", width=15, command=Lab3_Cpp.inputChar("p"))
         self.btn_play.grid(row=0, column=1)
 
-        # Pause Button
-        self.btn_pause=Button(bottom_frame, text="Pause", width=15, command=self.pause_video)
-        self.btn_pause.grid(row=0, column=2)
-
         # Stop Button
-        self.btn_pause=Button(bottom_frame, text="Stop", width=15, command=self.stop_video)
+        self.btn_pause=Button(bottom_frame, text="Stop", width=15, command=Lab3_Cpp.inputChar("q"))
         self.btn_pause.grid(row=0, column=3)
 
         # Back Button
-        self.btn_back=Button(bottom_frame, text="Back to start", width=15, command=self.back_video)
+        self.btn_back=Button(bottom_frame, text="Back to start", width=15, command=Lab3_Cpp.inputChar("r"))
         self.btn_back.grid(row=0, column=4)
 
-        self.delay = 30  # ms
+        # Quit Button
+        self.btn_quit=Button(bottom_frame, text="Quit", width=15, command=self.quit)
+        self.btn_quit.grid(row=0, column=4)
+
+        #self.delay = 30  # ms
 
         self.window.mainloop()
 
@@ -56,87 +62,89 @@ class videoGUI:
 
         self.filename = filedialog.askopenfilename(title="Select file", filetypes=(("AVI files", "*.avi"), ("MP4 files", "*.mp4"),
                                                                                          ("WMV files", "*.wmv")))
-        print(self.filename)
+        Lab3_Cpp.initModule(self.filename)
 
-        # Open the video file
-        self.cap = cv2.VideoCapture(self.filename)
+        #print(self.filename)
 
-        self.width = self.cap.get(cv2.CAP_PROP_FRAME_WIDTH)
-        self.height = self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
+        ## Open the video file
+        #self.cap = cv2.VideoCapture(self.filename)
+
+        #self.width = self.cap.get(cv2.CAP_PROP_FRAME_WIDTH)
+        #self.height = self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
        
-        self.canvas.config(width = self.width, height = self.height)
+        #self.canvas.config(width = self.width, height = self.height)
 
-        self.open = True
-        self.stop = False
-        self.run_video()
+        #self.open = True
+        #self.stop = False
+        #self.run_video()
 
 
-    def get_frame(self):   # get only one frame
+    #def get_frame(self):   # get only one frame
 
-        try:
+    #    try:
 
-            if self.cap.isOpened():
-                ret, frame = self.cap.read()
-                return (ret, cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
+    #        if self.cap.isOpened():
+    #            ret, frame = self.cap.read()
+    #            return (ret, cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
 
-        except:
-            messagebox.showerror(title='Video file not found', message='Please select a video file.')
+    #    except:
+    #        messagebox.showerror(title='Video file not found', message='Please select a video file.')
     
-    #Play button
-    def play_video(self):
+    ##Play button
+    #def play_video(self):
         
-        self.stop = False
+    #    self.stop = False
 
-        if self.pause == True:
-            self.pause = False
-            self.run_video()
+    #    if self.pause == True:
+    #        self.pause = False
+    #        self.run_video()
     
-    #Pause button
-    def pause_video(self):
-        self.pause = True
+    ##Pause button
+    #def pause_video(self):
+    #    self.pause = True
 
-    def run_video(self):
+    #def run_video(self):
 
-        # Get a frame from the video source, and go to the next frame automatically
-        if self.open == True:
-            ret, frame = self.get_frame() 
+    #    # Get a frame from the video source, and go to the next frame automatically
+    #    if self.open == True:
+    #        ret, frame = self.get_frame() 
          
-            self.pos = self.cap.get(cv2.CAP_PROP_POS_FRAMES)        #Frame position
-            self.length = self.cap.get(cv2.CAP_PROP_FRAME_COUNT)    #Total frame
+    #        self.pos = self.cap.get(cv2.CAP_PROP_POS_FRAMES)        #Frame position
+    #        self.length = self.cap.get(cv2.CAP_PROP_FRAME_COUNT)    #Total frame
 
-            if ret:
-                self.photo = PIL.ImageTk.PhotoImage(image = PIL.Image.fromarray(frame))
-                self.canvas.create_image(0, 0, image = self.photo, anchor = NW)
+    #        if ret:
+    #            self.photo = PIL.ImageTk.PhotoImage(image = PIL.Image.fromarray(frame))
+    #            self.canvas.create_image(0, 0, image = self.photo, anchor = NW)
             
-            # Loop at the end of the video
-            if self.pos == self.length:
-                self.cap.set(cv2.CAP_PROP_POS_FRAMES, 0.0)
+    #        # Loop at the end of the video
+    #        if self.pos == self.length:
+    #            self.cap.set(cv2.CAP_PROP_POS_FRAMES, 0.0)
 
-            if self.pause:
-                self.window.after_cancel(self.after_id)
-            else:
-                self.after_id = self.window.after(self.delay, self.run_video)
+    #        if self.pause:
+    #            self.window.after_cancel(self.after_id)
+    #        else:
+    #            self.after_id = self.window.after(self.delay, self.run_video)
    
     #Pause button
-    def stop_video(self):
+    def quit(self):
 
         self.stop = True
         self.open = False
 
-        self.cap.release()
+        #self.cap.release()
         self.canvas.delete("all")
-        cv2.destroyAllWindows()
+        #cv2.destroyAllWindows()
         
     #Back button
-    def back_video(self):
+    #def back_video(self):
 
-        self.cap.set(cv2.CAP_PROP_POS_FRAMES,0.0) #set frame position
+    #    self.cap.set(cv2.CAP_PROP_POS_FRAMES,0.0) #set frame position
     
     # Release the video source when the object is destroyed
-    def __del__(self):
+    #def __del__(self):
 
-        if self.cap.isOpened():
-            self.cap.release()
+    #    if self.cap.isOpened():
+    #        self.cap.release()
 
 ##### End Class #####
 
